@@ -45,4 +45,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+    public function viewedPages()
+    {
+        return $this->belongsToMany(Page::class)
+            ->withTimestamps()
+            ->withPivot('viewed_at');
+    }
+
+    public function viewPage(Page $page)
+    {
+        $this->viewedPages()->syncWithoutDetaching([
+            $page->id => ['viewed_at' => now()]
+        ]);
+    }
 }
